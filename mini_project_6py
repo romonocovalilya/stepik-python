@@ -1,0 +1,155 @@
+from random import *
+word_list = [
+    "питон",
+    "функция",
+    "список",
+    "переменная",
+    "цикл",
+    "строка",
+    "индекс",
+    "модуль",
+]
+
+def get_word(word_list):
+    word = choice(word_list).upper()
+    return word
+
+def display_hangman(tries):
+
+    stages = [  '''
+                   --------
+                   |      |
+                   |      O
+                   |     \\|/
+                   |      |
+                   |     / \\
+                   -
+                ''',
+                
+                '''
+                   --------
+                   |      |
+                   |      O
+                   |     \\|/
+                   |      |
+                   |     / 
+                   -
+                ''',
+
+                '''
+                   --------
+                   |      |
+                   |      O
+                   |     \\|/
+                   |      |
+                   |      
+                   -
+                ''',
+
+                '''
+                   --------
+                   |      |
+                   |      O
+                   |     \\|
+                   |      |
+                   |     
+                   -
+                ''',
+
+                '''
+                   --------
+                   |      |
+                   |      O
+                   |      |
+                   |      |
+                   |     
+                   -
+                ''',
+
+                '''
+                   --------
+                   |      |
+                   |      O
+                   |    
+                   |      
+                   |     
+                   -
+                ''',
+
+                '''
+                   --------
+                   |      |
+                   |      
+                   |    
+                   |      
+                   |     
+                   -
+                '''
+    ]
+    return stages[tries]
+
+def play(word):
+    word_completion = ['_'] * len(word)  
+    guessed = False                   
+    guessed_letters = []               
+    guessed_words = []               
+    tries = 6   
+
+    print("Давайте играть в угадайку слов!")   
+    print(display_hangman(tries))    
+    print(f"Слово: {"".join(word_completion)}")
+    print()
+    
+    while not guessed and tries > 0:
+        guess = input("Введите букву или слово целиком: ").upper()
+        
+        if not guess.isalpha():
+            print("Ошибка! Вводить можно только буквы.")
+            continue
+        
+        if len(guess) == 1:
+            if guess in guessed_letters:
+                print(f"Вы уже вводили букву {guess}.")
+                
+            elif guess not in word:
+                print(f"Буквы {guess} нет в слове.")
+                tries -= 1
+                guessed_letters.append(guess)
+
+            else:
+                print(f"Отлично! Буква {guess} есть в слове.")
+                guessed_letters.append(guess)
+
+                for i in range(len(word)):
+                    if word[i] == guess:
+                        word_completion[i] = guess
+
+                if "_" not in word_completion:
+                    guessed = True
+
+        else:
+
+            if guess in guessed_words:
+                print(f"Вы уже вводили слово {guess}.")
+
+            elif guess != word:
+                print(f"Неверно! Слово {guess} не разагадано.")
+                tries -= 1
+                guessed_words.append(guess)
+
+            else:
+                guessed = True
+
+        print(display_hangman(tries))
+        print("Слово:", " ".join(word_completion))
+        print(f"Осталось попыток: {tries}")
+        print()
+
+    if guessed:
+        print("Поздравляем, вы угадали слово! Вы победили!")
+
+    else:
+        print(f"Вы проиграли. Было загадано слово: {word}.")
+
+secret_word = get_word(word_list)
+play(secret_word)
